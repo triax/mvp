@@ -1,10 +1,37 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+import { type FirebaseOptions, initializeApp } from "firebase/app";
+const firebaseConfig: FirebaseOptions = JSON.parse(import.meta.env.VITE_FIREBASE_CONFIG_JSONSTR);
+const app = initializeApp(firebaseConfig, "mvp");
+
+import { getFirestore, collection, addDoc, onSnapshot } from "firebase/firestore";
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [users, setUsers] = useState<any[]>([]);
+  const db = getFirestore(app);
+  const ref =  collection(db, "users");
+
+  useEffect(() => {
+    onSnapshot(ref, (querySnapshot) => {
+      const data: any[] = [];
+      querySnapshot.forEach((doc) => {
+        // console.log("doc.id", doc.id);
+        data.push({ id: doc.id, data: doc.data() });
+      });
+      setUsers(data);
+    });
+  }, []);
+
+  const addUser = async () => {
+    await addDoc(ref, {
+      first: "Ada",
+      last: "Lovelace",
+      born: 1815
+    });
+  }
 
   return (
     <>
@@ -16,18 +43,10 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Hello my first CloudFlare Pages</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <button onClick={() => addUser()}>Click me</button>
+        {users.map((user) => <div key={user.id}>{user.id}</div>)}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
