@@ -1,54 +1,61 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 import { type FirebaseOptions, initializeApp } from "firebase/app";
 const firebaseConfig: FirebaseOptions = JSON.parse(import.meta.env.VITE_FIREBASE_CONFIG_JSONSTR);
 const app = initializeApp(firebaseConfig, "mvp");
+import { getFirestore, collection } from "firebase/firestore";
+const db = getFirestore(app);
+const refVotes = collection(db, "votes");
 
-import { getFirestore, collection, addDoc, onSnapshot } from "firebase/firestore";
+import User from './models/User';
+import Game from "./models/Game";
+import SignInView from './components/SignIn';
+import CheckInView from './components/CheckIn';
+import RankingView from './components/Ranking';
 
 function App() {
-  const [users, setUsers] = useState<any[]>([]);
-  const db = getFirestore(app);
-  const ref =  collection(db, "users");
+  const [myself, setMyself] = useState<User|null>(null);
+  const [game, setCurrentGame] = useState<Game|null>(null);
 
   useEffect(() => {
-    onSnapshot(ref, (querySnapshot) => {
-      const data: any[] = [];
-      querySnapshot.forEach((doc) => {
-        // console.log("doc.id", doc.id);
-        data.push({ id: doc.id, data: doc.data() });
-      });
-      setUsers(data);
-    });
+    (async () => {
+      setMyself(await User.myself());
+      setCurrentGame(await Game.current());
+    })();
   }, []);
-
-  const addUser = async () => {
-    await addDoc(ref, {
-      first: "Ada",
-      last: "Lovelace",
-      born: 1815
-    });
+  const signin = async (nickname: string) => {
+    setMyself(await User.signin(nickname));
+  }
+  const checkin = async (game: Game) => {
+    setCurrentGame(await Game.checkin(game));
   }
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <div className="card">
-        <button onClick={() => addUser()}>Click me</button>
-        {users.map((user) => <div key={user.id}>{user.id}</div>)}
-      </div>
-    </>
-  )
+  // const addUser = async () => {
+  //   await addDoc(ref, {
+  //     first: "Ada",
+  //     last: "Lovelace",
+  //     born: 1815
+  //   });
+  // }
+
+  if (!myself) {
+    return <SignInView
+      signin={signin}
+    />;
+  }
+  if (!game) {
+    return <CheckInView
+      checkin={checkin}
+      myself={myself}
+    />;
+  }
+  return <RankingView
+    signout={() => setMyself(null)}
+    myself={myself}
+    game={game}
+    collection={refVotes}
+  />;
 }
 
 export default App
