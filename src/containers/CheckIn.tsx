@@ -12,19 +12,30 @@ export default function CheckInView({ checkin, myself }: {
         (async () => setGames(await Game.fetch(url)))();
     }, []);
 
+    const getButtonText = (game: Game) => {
+        switch (game.status) {
+            case GameStatus.ACTIVE:
+                return "この試合にチェックイン";
+            case GameStatus.ENDED:
+                return "この試合は終了しました";
+            case GameStatus.UPCOMING:
+                return "この試合はまだ始まっていません";
+        }
+    };
+
     return (
         <div>
             <h2>MVP投票システム</h2>
             <span>Provided by <a href="https://www.triax.football" target="_blank">Clud Triax</a></span>
             <h1>STEP 2/3:<br/>観戦中の試合にチェックインしてください</h1>
             <div>
-                {games.map((game) => <div key={game.id}>
+                {games.map((game) => <div key={game.id} style={{ marginBottom: "32px" }}>
                     <div>{game.kickoff_time?.toDateString()}</div>
-                    <div>{game.home_team} vs {game.visitor_team}</div>
+                    <h2 style={{margin: 0}}>{game.home_team} vs {game.visitor_team}</h2>
                     <button
                         disabled={game.status != GameStatus.ACTIVE}
                         onClick={() => checkin(game)}
-                    >この試合にチェックイン</button>
+                    >{getButtonText(game)}</button>
                 </div>)}
             </div>
             <h2>{myself.nickname}</h2>
