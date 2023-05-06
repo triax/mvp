@@ -29,9 +29,10 @@ export default function CheckInView({ checkin, myself }: {
             <span>Provided by <a href="https://www.triax.football" target="_blank">Clud Triax</a></span>
             <h1>STEP 2/3:<br/>観戦中の試合にチェックインしてください</h1>
             <div>
-                {games.map((game) => <div key={game.id} style={{ marginBottom: "32px" }}>
-                    <div>{game.kickoff_time?.toDateString()}</div>
-                    <h2 style={{margin: 0}}>{game.home_team} vs {game.visitor_team}</h2>
+                {games.map((game) => <div key={game.id} style={{ marginBottom: "3rem" }}>
+                    <div>{game.kickoff_time?.toDateString()} {game.kickoff_time?.toLocaleTimeString()} Kickoff</div>
+                    <h2 style={{ margin: 0, lineHeight: "0.8em" }}>{game.home_team}</h2>
+                    <h2 style={{ textAlign: "right", lineHeight: "0.8em" }}><i>vs</i> {game.visitor_team}</h2>
                     <button
                         disabled={game.status != GameStatus.ACTIVE}
                         onClick={() => checkin(game)}
