@@ -26,16 +26,20 @@ export class Player {
     }
 
     private static googledrivePictureURL(raw: string): string {
-        const id = raw.split("/")[5]; // /view?usp=sharingの場合はこれで正しい
-        return `https://drive.google.com/uc?export=view&id=${id}`;
+        const url = new URL(raw);
+        if (url.host.match("drive.google.com")) {
+            const id = raw.split("/")[5];
+            return `https://drive.google.com/uc?export=view&id=${id}`;
+        }
+        return raw;
     }
 
-    static async fetch(spreadsheetURL: string): Promise<Player[]> {
+    static async fetch(spreadsheetURL: string, shuffle = false): Promise<Player[]> {
         const response = await fetch(spreadsheetURL);
         const text = await response.text();
         const lines = text.split("\n").map(v => v.trim());
         const headers = lines[0].split(",").map(col => col.trim());
-        return lines.slice(1).map(line => {
+        const list = lines.slice(1).map(line => {
             const values = line.split(",").map(v => v.trim());
             const obj: Record<string, any> = {};
             for (let i = 0; i < headers.length; i++) {
@@ -43,5 +47,15 @@ export class Player {
             }
             return new Player(obj);
         });
+        return shuffle ? Player.shuffle(list) : list;
+    }
+
+    static shuffle(players: Player[]): Player[] {
+        const shuffled = players.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
     }
 }

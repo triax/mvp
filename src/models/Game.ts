@@ -1,7 +1,9 @@
 import { Model, Types } from "jstorm/lib/browser/local";
 
-enum GameStatus {
+export enum GameStatus {
     UPCOMING = "upcoming",
+    ACTIVE = "active",
+    ENDED = "ended",
     UNKOWN = "unknown",
 }
 
@@ -44,13 +46,15 @@ export default class Game extends Model {
     home_team_roster_url = "";
     visitor_team_roster_url = "";
 
+    // とりあえず、TRIAXがvisitorなのでvisitorを返す
+    supporting = "visitor";
+
     static override schema = {
         kickoff_time: Types.date,
         gameset_time: Types.date,
     }
 
-    // とりあえず、TRIAXがvisitorなのでvisitorを返す
-    public getRosterURL(team = "visitor"): string {
+    public getRosterURL(team = this.supporting): string {
         switch (team) {
             case "home":
                 return this.home_team_roster_url;

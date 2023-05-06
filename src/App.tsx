@@ -10,9 +10,10 @@ const refVotes = collection(db, "votes");
 
 import User from './models/User';
 import Game from "./models/Game";
-import SignInView from './components/SignIn';
-import CheckInView from './components/CheckIn';
-import RankingView from './components/Ranking';
+import SignInView from './containers/SignIn';
+import CheckInView from './containers/CheckIn';
+import RankingView from './containers/Ranking';
+import PickUpView from './containers/PickUp';
 
 function App() {
   const [myself, setMyself] = useState<User|null>(null);
@@ -24,20 +25,13 @@ function App() {
       setCurrentGame(await Game.current());
     })();
   }, []);
+
   const signin = async (nickname: string) => {
     setMyself(await User.signin(nickname));
   }
   const checkin = async (game: Game) => {
     setCurrentGame(await Game.checkin(game));
   }
-
-  // const addUser = async () => {
-  //   await addDoc(ref, {
-  //     first: "Ada",
-  //     last: "Lovelace",
-  //     born: 1815
-  //   });
-  // }
 
   if (!myself) {
     return <SignInView
@@ -49,6 +43,12 @@ function App() {
       checkin={checkin}
       myself={myself}
     />;
+  }
+  if (!myself.hasVotedFor(game)) {
+    return <PickUpView
+      myself={myself}
+      game={game}
+    />
   }
   return <RankingView
     signout={() => setMyself(null)}
