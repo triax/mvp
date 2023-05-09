@@ -23,10 +23,12 @@ export default function PickUpView({
             <h1>STEP 3/3:<br/>まず誰かに投票してみましょう</h1>
             <small>※ 試合中、30秒ごとに何度でも投票できます！まずは直感で好きな選手に投票してみてください。</small>
             <div>
-                {players.map((player) => <PlayerItem key={player.unique_nickname} player={player} />)}
+                {players.map((player) => <PlayerItem
+                    key={player.fullname_eng} player={player}
+                    defaultIcon={game.getDefaultIconURL()}
+                />)}
             </div>
             <h2>{myself.nickname}</h2>
         </div>
-
     )
 }

@@ -33,6 +33,10 @@ function App() {
     setCurrentGame(await Game.checkin(game));
   }
 
+  // TODO: Remove
+  if (import.meta.env.VITE_CF_PRODUCTION_PAGE) {
+    return <h1>建設中</h1>;
+  }
   if (!myself) {
     return <SignInView
       signin={signin}

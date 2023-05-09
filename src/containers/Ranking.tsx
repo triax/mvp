@@ -55,7 +55,7 @@ export default function RankingView({
         <div>
             <h1>Ranking</h1>
             <div>
-                {players.map((player) => <PlayerRow key={player.unique_nickname} player={player} />)}
+                {players.map((player) => <PlayerRow key={player.fullname_eng} player={player} />)}
             </div>
             <button onClick={signout}>Sign Out</button>
         </div>

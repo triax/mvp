@@ -5,7 +5,8 @@ export class Player {
     public first_name: string;
     public last_name: string;
     public fullname_eng: string;
-    public unique_nickname: string;
+    // public unique_nickname: string;
+    public yomi_hiragana: string;
     public position: string;
     public comment: string;
     public profile_image: string;
@@ -17,7 +18,8 @@ export class Player {
         this.first_name = props.first_name;
         this.last_name = props.last_name;
         this.fullname_eng = props.fullname_eng;
-        this.unique_nickname = props.unique_nickname;
+        // this.unique_nickname = props.unique_nickname;
+        this.yomi_hiragana = props.yomi_hiragana;
         this.position = props.position;
         this.comment = props.comment;
         this.profile_image = Player.googledrivePictureURL(props.googledrive_sharable_picture_url);
@@ -26,10 +28,14 @@ export class Player {
     }
 
     private static googledrivePictureURL(raw: string): string {
-        const url = new URL(raw);
-        if (url.host.match("drive.google.com")) {
-            const id = raw.split("/")[5];
-            return `https://drive.google.com/uc?export=view&id=${id}`;
+        try {
+            const url = new URL(raw);
+            if (url.host.match("drive.google.com")) {
+                const id = raw.split("/")[5];
+                return `https://drive.google.com/uc?export=view&id=${id}`;
+            }
+        } catch (e) {
+            return "";
         }
         return raw;
     }

@@ -2,8 +2,10 @@ import { Player } from "../models/Player";
 
 export default function PlayerItem({
     player,
+    defaultIcon,
 }: {
     player: Player;
+    defaultIcon: string;
 }) {
     const profsize = "20vw";
     return (
@@ -11,8 +13,25 @@ export default function PlayerItem({
            <div style={{display: "flex"}}>
                 <div style={{width: profsize}}>
                     <div
-                        style={{backgroundImage: `url(${player.profile_image})`, backgroundSize: "cover", width: profsize, height: profsize, borderRadius: 4}}
-                    ></div>
+                        style={{
+                            backgroundImage: `url(${defaultIcon})`,
+                            backgroundSize: "cover",
+                            width: profsize,
+                            height: profsize,
+                            borderRadius: 4,
+                            overflow: "hidden",
+                        }}
+                    >
+                        <img
+                            src={player.profile_image}
+                            style={{
+                                width: profsize,
+                                borderRadius: 4,
+                                objectFit: "cover",
+                            }}
+                            onError={(e) => e.currentTarget.style.display = "none"}
+                        />
+                    </div>
                 </div>
                 <div style={{flex: 2, marginLeft: "8px"}}>
                     <div>

@@ -74,3 +74,10 @@ button:disabled {
     /* background-color: #f9f9f9; */
   }
 }
+
+img:-moz-broken {
+  display: none;
+}
+img[src="error"]:-moz-broken {
+  display: initial;
+}

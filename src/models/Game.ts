@@ -7,6 +7,11 @@ export enum GameStatus {
     UNKOWN = "unknown",
 }
 
+export enum SupportingSide {
+    HOME = "home",
+    VISITOR = "visitor",
+}
+
 export default class Game extends Model {
     static override _namespace_ = "Game";
     public static current(): Promise<Game | null> {
@@ -40,14 +45,16 @@ export default class Game extends Model {
     status = GameStatus.UNKOWN;
     kickoff_time?: Date;
     gameset_time?: Date;
-    home_team = "";
-    visitor_team = "";
     venue = "";
+    home_team = "";
     home_team_roster_url = "";
+    home_team_default_icon = "";
+    visitor_team = "";
     visitor_team_roster_url = "";
+    visitor_team_default_icon = "";
 
     // とりあえず、TRIAXがvisitorなのでvisitorを返す
-    supporting = "visitor";
+    supporting = SupportingSide.VISITOR;
 
     static override schema = {
         kickoff_time: Types.date,
@@ -62,6 +69,16 @@ export default class Game extends Model {
                 return this.visitor_team_roster_url;
             default:
                 return this.visitor_team_roster_url;
+        }
+    }
+    public getDefaultIconURL(team = this.supporting): string {
+        switch (team) {
+            case "home":
+                return this.home_team_default_icon;
+            case "visitor":
+                return this.visitor_team_default_icon;
+            default:
+                return this.visitor_team_default_icon;
         }
     }
 }
