@@ -14,6 +14,7 @@ import SignInView from './containers/SignIn';
 // import CheckInView from './containers/CheckIn'; // TODO: 
 import RankingView from './containers/Ranking';
 import PickUpView from './containers/PickUp';
+import WaitingRoomView from './containers/WaitingRoom';
 
 function App() {
   const [myself, setMyself] = useState<User|null>(null);
@@ -45,11 +46,6 @@ function App() {
     setCurrentGame(await x.save() || null);
   }
 
-  // TODO: Remove
-  if (import.meta.env.VITE_CF_PRODUCTION_PAGE) {
-    return <h1>建設中</h1>;
-  }
-
   if (!myself) {
     return <SignInView
       signin={signin}
@@ -58,6 +54,10 @@ function App() {
 
   if (!game) {
     return <h1>試合情報を<br/>読込中...</h1>;
+  }
+
+  if (!game.isReadyForVote(2)) {
+    return <WaitingRoomView upcoming={game} />;
   }
 
   // if (!game) {

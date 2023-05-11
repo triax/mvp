@@ -81,4 +81,11 @@ export default class Game extends Model {
                 return this.visitor_team_default_icon;
         }
     }
+
+    isReadyForVote(offsetHours = 2): boolean {
+        if (this.status !== GameStatus.ACTIVE) return false;
+        if (!this.kickoff_time) return false;
+        const offset = (1000 * 60 * 60 * offsetHours)
+        return (this.kickoff_time?.getTime() <= (Date.now() + offset));
+    }
 }
