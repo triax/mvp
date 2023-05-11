@@ -1,25 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export default function SignInView({ signin }: {
-  signin: (nickname: string) => void;
+  signin: (easyid: string, nickname: string) => void;
 }) {
   const [nickname, setNickname] = useState<string>("");
+  const [easyid, setEasyid] = useState<string>("");
+  useEffect(() => {
+    setEasyid(Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8));
+  }, []);
   return (
     <div>
-      <h2>MVP投票システム</h2>
+      <h2>リアルタイムMVP投票システム</h2>
       <span>Provided by <a href="https://www.triax.football" target="_blank">Clud Triax</a></span>
-      <h1>STEP 1/3:<br />あなたのニックネームを登録してください</h1>
+      <h1>登録不要ですが、ニックネーム設定すると、<br />よりたのしいと思います！</h1>
       <div style={{display: "flex"}}>
         <input
-          style={{flex: 1, fontSize: "0.8rem"}}
+          style={{ flex: 1, fontSize: "1.2rem", height: "2rem" }}
           type="text" onChange={ev => setNickname(ev.target.value)}
-          placeholder="ニックネームを入力してください"
+          placeholder="ニックネームを設定"
         />
+      </div>
+      <div style={{ textAlign: "center", marginTop: "0.5em" }}>
         <button
-          style={{ marginLeft: "0.2rem", borderRadius: 3 }}
-          disabled={nickname.trim().length === 0}
-          onClick={() => signin(nickname)}
+          style={{ borderRadius: 3 }}
+          onClick={() => signin(easyid, nickname)}
         >次へ</button>
       </div>
     </div>

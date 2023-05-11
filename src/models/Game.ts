@@ -22,7 +22,7 @@ export default class Game extends Model {
         return await game.save();
     }
 
-    public static async fetch(spreadsheetURL: string): Promise<Game[]> {
+    public static async fetch(spreadsheetURL: string = import.meta.env.VITE_GAMEDATA_SPREADSHEET_URL): Promise<Game[]> {
         const response = await fetch(spreadsheetURL);
         const text = await response.text();
         const lines = text.split("\n");
@@ -61,7 +61,7 @@ export default class Game extends Model {
         gameset_time: Types.date,
     }
 
-    public getRosterURL(team = this.supporting): string {
+    public getRosterURL(team = SupportingSide.VISITOR): string {
         switch (team) {
             case "home":
                 return this.home_team_roster_url;
@@ -71,7 +71,7 @@ export default class Game extends Model {
                 return this.visitor_team_roster_url;
         }
     }
-    public getDefaultIconURL(team = this.supporting): string {
+    public getDefaultIconURL(team = SupportingSide.VISITOR): string {
         switch (team) {
             case "home":
                 return this.home_team_default_icon;

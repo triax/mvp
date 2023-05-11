@@ -35,9 +35,9 @@ export class Player {
                 return `https://drive.google.com/uc?export=view&id=${id}`;
             }
         } catch (e) {
-            return "";
+            return ""; // Invalid URL
         }
-        return raw;
+        return raw; // Valid URL but not Google Drive
     }
 
     static async fetch(spreadsheetURL: string, shuffle = false): Promise<Player[]> {

@@ -1,0 +1,28 @@
+
+div.loading-container {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+div.loading-container>div.loading-box {
+    width: 10vw;
+    height: 10vw;
+    border: 0.2rem dashed #d0d0d0;
+    border-radius: 10vw;
+    animation: rotate 1800ms ease-in-out infinite;
+}
+div.loading-container>span.loading-text {
+    position: absolute;
+    font-size: x-small;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(359deg);
+    }
+}

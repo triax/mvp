@@ -9,9 +9,9 @@ const db = getFirestore(app);
 const refVotes = collection(db, "votes");
 
 import User from './models/User';
-import Game from "./models/Game";
+import Game, { GameStatus, SupportingSide } from "./models/Game";
 import SignInView from './containers/SignIn';
-import CheckInView from './containers/CheckIn';
+// import CheckInView from './containers/CheckIn'; // TODO: 
 import RankingView from './containers/Ranking';
 import PickUpView from './containers/PickUp';
 
@@ -22,38 +22,59 @@ function App() {
   useEffect(() => {
     (async () => {
       setMyself(await User.myself());
+      // {{{ FIXME: Delete this block https://github.com/triax/mvp-page/issues/1
+      const current = await Game.current();
+      if (!current) {
+        const active = (await Game.fetch()).filter(g => g.status == GameStatus.ACTIVE).pop();
+        if (active) await Game.checkin(active);
+      }
+      // }}}
       setCurrentGame(await Game.current());
     })();
   }, []);
 
-  const signin = async (nickname: string) => {
-    setMyself(await User.signin(nickname));
+  const signin = async (easyid: string, nickname: string) => {
+    setMyself(await User.signin(easyid, nickname));
   }
-  const checkin = async (game: Game) => {
-    setCurrentGame(await Game.checkin(game));
+  // const checkin = async (game: Game) => {
+  //   setCurrentGame(await Game.checkin(game));
+  // }
+  const switchTeam = async (team: SupportingSide) => {
+    const x = Game.new(game as any, "current");
+    x.supporting = team;
+    setCurrentGame(await x.save() || null);
   }
 
   // TODO: Remove
   if (import.meta.env.VITE_CF_PRODUCTION_PAGE) {
     return <h1>建設中</h1>;
   }
+
   if (!myself) {
     return <SignInView
       signin={signin}
     />;
   }
+
   if (!game) {
-    return <CheckInView
-      checkin={checkin}
-      myself={myself}
-    />;
+    return <h1>試合情報を<br/>読込中...</h1>;
   }
+
+  // if (!game) {
+  //   return <CheckInView
+  //     checkin={checkin}
+  //     myself={myself}
+  //   />;
+  // }
+
   if (!myself.hasVotedFor(game)) {
     return <PickUpView
       myself={myself}
       game={game}
-    />
+      switchTeam={switchTeam}
+    />;
   }
+
   return <RankingView
     signout={() => setMyself(null)}
     myself={myself}

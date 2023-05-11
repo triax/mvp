@@ -1,0 +1,29 @@
+
+div.team-switcher {
+    display: flex;
+    margin: 16px 0;
+}
+div.team-switcher>.team-item {
+    flex: 1;
+    border-width: 0.1rem;
+    border-style: none none solid none;
+    border-color: #d0d0d0;
+    padding: 8px 4px;
+    text-align: center;
+}
+div.team-switcher>.team-item.selected {
+    border-style: solid;
+    border-color: #b12020;
+    box-shadow: 0 0 8px 0 gray;
+}
+div.team-switcher>.team-item>.team-name {
+    font-size: small;
+    font-weight: bold;
+}
+div.team-switcher>.team-item>.team-icon {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    background-position: center;
+    background-size: contain;
+}
