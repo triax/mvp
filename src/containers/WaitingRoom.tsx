@@ -26,7 +26,8 @@ export default function WaitingRoomView({
 }: {
     upcoming: Game;
 }) {
-    const [secondsToStart, setSecondsToStart] = useState<number>(0);
+    const diff = upcoming.kickoff_time!.getTime() - Date.now();
+    const [secondsToStart, setSecondsToStart] = useState<number>(diff);
     useEffect(() => {
         const interval = setInterval(() => {
             const diff = upcoming.kickoff_time!.getTime() - Date.now();
