@@ -82,7 +82,7 @@ export default class Game extends Model {
         }
     }
 
-    isReadyForVote(offsetHours = 2): boolean {
+    isReadyForVote(offsetHours = 1): boolean {
         if (this.status !== GameStatus.ACTIVE) return false;
         if (!this.kickoff_time) return false;
         const offset = (1000 * 60 * 60 * offsetHours)
