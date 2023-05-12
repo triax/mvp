@@ -15,11 +15,12 @@ import SignInView from './containers/SignIn';
 import RankingView from './containers/Ranking';
 import PickUpView from './containers/PickUp';
 import WaitingRoomView from './containers/WaitingRoom';
+import VoteView from './containers/Vote';
 
 function App() {
   const [myself, setMyself] = useState<User|null>(null);
   const [game, setCurrentGame] = useState<Game|null>(null);
-  const [ts, refresh] = useState<number>(0);
+  const [_, refresh] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
@@ -57,6 +58,7 @@ function App() {
     return <h1>試合情報を<br/>読込中...</h1>;
   }
 
+  // FIXME: https://github.com/triax/mvp-page/issues/1
   // if (!game) {
   //   return <CheckInView
   //     checkin={checkin}
@@ -78,12 +80,22 @@ function App() {
     />;
   }
 
+  if (location.hash == "#vote") {
+    return <VoteView
+      myself={myself}
+      game={game}
+      collection={refVotes}
+      switchTeam={switchTeam}
+    />;
+  }
+
   return <RankingView
     // signout={() => setMyself(null)}
     myself={myself}
     game={game}
     collection={refVotes}
     switchTeam={switchTeam}
+    refresh={() => refresh(Date.now())}
   />;
 }
 

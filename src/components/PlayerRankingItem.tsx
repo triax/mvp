@@ -1,13 +1,14 @@
 import { Player } from "../models/Player";
 import { PlayerRankingEntry } from "../models/RankingEntry";
 
-// FIXME: このコンポーネントを実装する
 export default function PlayerRankingItem({
     entry,
-    upvote,
+    // upvote,
+    defautlIcon,
 }: {
     entry: PlayerRankingEntry
     upvote?: (player: Player) => void;
+    defautlIcon: string;
 }) {
     const profsize = "20vw";
     return (
@@ -17,7 +18,7 @@ export default function PlayerRankingItem({
                     <div
 
                         style={{
-                            backgroundImage: `url(${entry.player.profile_image_url})`,
+                            backgroundImage: `url(${defautlIcon})`,
                             backgroundSize: "cover",
                             width: profsize,
                             height: profsize,

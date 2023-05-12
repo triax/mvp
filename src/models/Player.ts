@@ -1,6 +1,3 @@
-import Game, { SupportingSide } from "./Game";
-import Vote from "./Vote";
-
 export class Player {
 
     public number: string;

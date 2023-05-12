@@ -1,10 +1,13 @@
 import { Player } from "../models/Player";
+import User from "../models/User";
 
 export default function PlayerItem({
+    myself,
     player,
     defaultIcon,
     upvote,
 }: {
+    myself?: User;
     player: Player;
     defaultIcon: string;
     upvote?: (player: Player) => void;
@@ -49,6 +52,7 @@ export default function PlayerItem({
                 <button
                     style={{width: "100%", height: "40px", borderRadius: 4, border: "solid thin #f0f0f0", marginTop: "8px"}}
                     onClick={async () => await upvote(player)}
+                    disabled={myself ? !myself.canVote() : false}
                 >
                     投票する ★+1
                 </button>

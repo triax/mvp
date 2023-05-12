@@ -24,7 +24,7 @@ export default class User extends Model {
         return !!this.voted[game.id];
     }
 
-    canVote(now = Date.now(), cooltime = 1000 * 3): boolean {
+    canVote(now = Date.now(), cooltime = 1000 * 30): boolean {
         return this.secondsUntilRevote(now, cooltime) >= 0;
     }
     secondsUntilRevote(now = Date.now(), cooltime = 1000 * 30): number {
