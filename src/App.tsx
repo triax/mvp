@@ -56,16 +56,16 @@ function App() {
     return <h1>試合情報を<br/>読込中...</h1>;
   }
 
-  if (!game.isReadyForVote(2)) {
-    return <WaitingRoomView upcoming={game} />;
-  }
-
   // if (!game) {
   //   return <CheckInView
   //     checkin={checkin}
   //     myself={myself}
   //   />;
   // }
+
+  if (!game.isReadyForVote(2) && !import.meta.env.DEV) {
+    return <WaitingRoomView upcoming={game} />;
+  }
 
   if (!myself.hasVotedFor(game)) {
     return <PickUpView
