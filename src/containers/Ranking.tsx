@@ -53,11 +53,13 @@ export default function RankingView({
         <div>
             <h2>現在の投票順位</h2>
             <TeamSwitchView game={game} switchTeam={switchTeam} />
-            {entries.map((entry) => <PlayerRankingItem
+            {entries.map((entry, i) => <PlayerRankingItem
+                rank={i + 1}
                 key={entry.player.identifier} entry={entry}
                 defautlIcon={game.getDefaultIconURL(game.supporting)}
+                refresh={refresh}
             />)}
-            <div>
+            <div style={{marginTop: "16px"}}>
                 {myself.canVote() ? <button style={{ width: "100%" }}
                     onClick={() => {
                         location.replace("#vote")

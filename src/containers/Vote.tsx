@@ -22,7 +22,9 @@ export default function VoteView({
     const [cooltime, setCooltime] = useState<number>(myself.secondsUntilRevote());
     const [players, setPlayers] = useState<Player[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [query, setQuery] = useState<string>("");
+
+    const url = new URL(location.href);
+    const [query, setQuery] = useState<string>(url.searchParams.get("q") || "");
 
     useEffect(() => {
         setLoading(true);
