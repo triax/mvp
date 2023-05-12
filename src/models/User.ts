@@ -6,7 +6,8 @@ export default class User extends Model {
     public nickname = "";
     public uuid = ""; // easy uuid
     public timestamp = 0;
-    public voted: Record<string, any> = {};
+    public voted: Record<string, boolean> = {};
+    public lastVotedTimestamp = 0;
     static myself(): Promise<User | null> {
         return User.find("myself");
     }
@@ -21,6 +22,13 @@ export default class User extends Model {
     hasVotedFor(game: Game | null): boolean {
         if (!game) return false;
         return !!this.voted[game.id];
+    }
+
+    canVote(now = Date.now(), cooltime = 1000 * 3): boolean {
+        return this.secondsUntilRevote(now, cooltime) >= 0;
+    }
+    secondsUntilRevote(now = Date.now(), cooltime = 1000 * 30): number {
+        return Math.floor((now - (this.lastVotedTimestamp + cooltime)) / 1000);
     }
 }
 

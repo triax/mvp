@@ -1,63 +1,75 @@
 import { onSnapshot, type CollectionReference, type DocumentData } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import User from "../models/User";
-import Game from "../models/Game";
+import Game, { SupportingSide } from "../models/Game";
 import { Player } from "../models/Player";
+import Vote from "../models/Vote";
+import TeamSwitchView from "../components/TeamSwitch";
+import { votesToEntries } from "../models/RankingEntry";
+import PlayerRankingItem from "../components/PlayerRankingItem";
 
 function startListeningVotes(
     ref: CollectionReference<DocumentData>,
-    update: (votes: any[]) => void,
+    game: Game,
+    update: (votes: Vote[]) => void,
 ) {
     onSnapshot(ref, (querySnapshot) => {
-        const data: any[] = [];
+        const votes: Vote[] = [];
         querySnapshot.forEach((doc) => {
-            data.push({ id: doc.id, data: doc.data() });
+            votes.push(Vote.decode({ ...doc.data(), id: doc.id }));
         });
-        update(data);
+        update(votes);
     });
 }
 
-function PlayerRow({ player }: {
-    player: Player,
-}) {
-    return (
-        <div style={{ display: "flex" }}>
-            <div style={{flex: 1}}>
-                <div style={{
-                    width: "40%", height: "80px",
-                    backgroundImage: `url(${player.profile_image})`,
-                    backgroundSize: "cover",
-                }}></div>
-            </div>
-        </div>
-    );
+interface PlayerEntry {
+    // 誰が
+    player: Player;
+    // どこで
+    game: Game;
+    side: SupportingSide;
+    // 何票
+    votes: Vote[];
 }
 
 export default function RankingView({
-    signout,
+    // signout,
     collection,
     myself,
     game,
+    switchTeam,
 }: {
-    signout: () => void;
+    // signout: () => void;
     collection: CollectionReference<DocumentData>;
+    switchTeam: (team: SupportingSide) => void;
     myself: User,
     game: Game,
 }) {
-    const [votes, setVotes] = useState<any[]>([]);
-    const [players, setPlayers] = useState<Player[]>([]);
+    const [votes, setVotes] = useState<Vote[]>([]);
+    const [cooltime, setCooltime] = useState<number>(myself.secondsUntilRevote());
     useEffect(() => {
-        startListeningVotes(collection, setVotes);
-        Player.fetch(game.getRosterURL()).then(setPlayers);
+        // FIXME: 現状、全votesを取得しているが、当試合のvotesだけ取得するようにする
+        startListeningVotes(collection, game, setVotes);
+    }, [collection, game]);
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCooltime(myself.secondsUntilRevote());
+        }, 1000);
+        return () => clearInterval(timer);
     }, []);
-    console.log(votes, myself, game);
+    const entries = votesToEntries(game, votes, (vote) => vote.side == game.supporting);
     return (
         <div>
-            <h1>Ranking</h1>
+            <h2>現在の投票順位</h2>
+            <TeamSwitchView game={game} switchTeam={switchTeam} />
+            {entries.map((entry) => <PlayerRankingItem key={entry.player.identifier} entry={entry} />)}
             <div>
-                {players.map((player) => <PlayerRow key={player.fullname_eng} player={player} />)}
+                {myself.canVote() ? <button style={{ width: "100%" }}>
+                    投票する
+                </button> : <button style={{ width: "100%" }} disabled>
+                    {-1 * cooltime}秒後に投票可能
+                </button>}
             </div>
-            <button onClick={signout}>Sign Out</button>
         </div>
     )
 }

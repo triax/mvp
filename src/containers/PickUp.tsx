@@ -7,14 +7,21 @@ import DebugResetButton from "../components/debug/DebugReset";
 import TeamSwitchView from "../components/TeamSwitch";
 import LoadingIndicator from "../components/Loading";
 
+import { CollectionReference, DocumentData } from "firebase/firestore";
+import Vote from "../models/Vote";
+
 export default function PickUpView({
-    // myself,
+    myself,
     game,
     switchTeam,
+    collection,
+    refresh,
 }: {
     myself: User;
     game: Game;
     switchTeam: (team: SupportingSide) => void;
+    collection: CollectionReference<DocumentData>;
+    refresh: () => void;
 }) {
     const [players, setPlayers] = useState<Player[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -25,6 +32,17 @@ export default function PickUpView({
             setLoading(false);
         });
     }, [game]);
+
+    const upvote = async (player: Player) => {
+        const vote = new Vote(myself, game, player, game.supporting);
+        await vote.push(collection);
+        await myself.update({
+            voted: { ...myself.voted, [game.id]: true },
+            lastVotedTimestamp: vote.timestamp,
+        });
+        refresh();
+    };
+
     return (
         <div>
             <h2>MVP投票システム</h2>
@@ -36,6 +54,7 @@ export default function PickUpView({
                 {players.map((player) => <PlayerItem
                     key={player.fullname_eng} player={player}
                     defaultIcon={game.getDefaultIconURL(game.supporting)}
+                    upvote={upvote}
                 />)}
             </div>}
             {/* <h2>{myself.nickname}</h2> */}

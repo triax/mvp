@@ -1,22 +1,23 @@
 import { Player } from "../models/Player";
+import { PlayerRankingEntry } from "../models/RankingEntry";
 
-export default function PlayerItem({
-    player,
-    defaultIcon,
+// FIXME: このコンポーネントを実装する
+export default function PlayerRankingItem({
+    entry,
     upvote,
 }: {
-    player: Player;
-    defaultIcon: string;
+    entry: PlayerRankingEntry
     upvote?: (player: Player) => void;
 }) {
     const profsize = "20vw";
     return (
         <div style={{borderRadius: 4, border: "solid thin #f0f0f0", margin: "8px 0", padding: "4px"}}>
-           <div style={{display: "flex"}}>
+            <div style={{display: "flex"}}>
                 <div style={{width: profsize}}>
                     <div
+
                         style={{
-                            backgroundImage: `url(${defaultIcon})`,
+                            backgroundImage: `url(${entry.player.profile_image_url})`,
                             backgroundSize: "cover",
                             width: profsize,
                             height: profsize,
@@ -25,7 +26,8 @@ export default function PlayerItem({
                         }}
                     >
                         <img
-                            src={player.profile_image_url}
+
+                            src={entry.player.profile_image_url}
                             style={{
                                 width: profsize,
                                 borderRadius: 4,
@@ -36,23 +38,15 @@ export default function PlayerItem({
                     </div>
                 </div>
                 <div style={{flex: 2, marginLeft: "8px"}}>
-                    <div>
-                        {player.number !== "" ? <span style={{}}>#{player.number} </span> : null}
-                        <span style={{fontWeight: "bold"}}>{player.last_name} {player.first_name} ({player.position})</span>
+                    {/* <div>
+                        {entries[0].player.number !== "" ? <span style={{}}>#{entries[0].player.number} </span> : null}
+                        <span style={{fontWeight: "bold"}}>{entries[0].player.last_name} {entries[0].player.first_name} ({entries[0].player.position})</span>
                     </div>
                     <div>
-                        <blockquote>{player.comment}</blockquote>
-                    </div>
+                        <blockquote>{entries[0].player.comment}</blockquote>
+                    </div> */}
                 </div>
             </div>
-            {upvote ? <div>
-                <button
-                    style={{width: "100%", height: "40px", borderRadius: 4, border: "solid thin #f0f0f0", marginTop: "8px"}}
-                    onClick={async () => await upvote(player)}
-                >
-                    投票する ★+1
-                </button>
-            </div> : null}
-        </div>
-    );
+            </div>
+    )
 }

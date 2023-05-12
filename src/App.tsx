@@ -19,12 +19,13 @@ import WaitingRoomView from './containers/WaitingRoom';
 function App() {
   const [myself, setMyself] = useState<User|null>(null);
   const [game, setCurrentGame] = useState<Game|null>(null);
+  const [ts, refresh] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
       setMyself(await User.myself());
-      // {{{ FIXME: Delete this block https://github.com/triax/mvp-page/issues/1
       const current = await Game.current();
+      // {{{ FIXME: Delete this block https://github.com/triax/mvp-page/issues/1
       if (!current) {
         const active = (await Game.fetch()).filter(g => g.status == GameStatus.ACTIVE).pop();
         if (active) await Game.checkin(active);
@@ -72,14 +73,17 @@ function App() {
       myself={myself}
       game={game}
       switchTeam={switchTeam}
+      collection={refVotes}
+      refresh={() => refresh(Date.now())}
     />;
   }
 
   return <RankingView
-    signout={() => setMyself(null)}
+    // signout={() => setMyself(null)}
     myself={myself}
     game={game}
     collection={refVotes}
+    switchTeam={switchTeam}
   />;
 }
 

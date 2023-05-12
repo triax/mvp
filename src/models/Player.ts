@@ -1,3 +1,5 @@
+import Game, { SupportingSide } from "./Game";
+import Vote from "./Vote";
 
 export class Player {
 
@@ -9,7 +11,7 @@ export class Player {
     public yomi_hiragana: string;
     public position: string;
     public comment: string;
-    public profile_image: string;
+    public profile_image_url: string;
     public optional_instagram_url?: string;
     public optional_twitter_url?: string;
 
@@ -22,7 +24,7 @@ export class Player {
         this.yomi_hiragana = props.yomi_hiragana;
         this.position = props.position;
         this.comment = props.comment;
-        this.profile_image = Player.googledrivePictureURL(props.googledrive_sharable_picture_url);
+        this.profile_image_url = Player.googledrivePictureURL(props.profile_image_url);
         this.optional_instagram_url = props.optional_instagram_url;
         this.optional_twitter_url = props.optional_twitter_url;
     }
@@ -63,5 +65,9 @@ export class Player {
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
         return shuffled;
+    }
+
+    get identifier(): string {
+        return `${this.number} ${this.fullname_eng} ${this.position}`;
     }
 }
