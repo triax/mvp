@@ -71,6 +71,11 @@ export default function RankingView({
                     {-1 * cooltime}秒後に投票可能
                 </button>}
             </div>
+            <div style={{marginTop: "16px"}}>
+                <a style={{fontSize: "x-small"}} href="https://www.triax.football/about/mvp-system" target="_blank">
+                    リアルタイム投票システムについて https://www.triax.football/about/mvp-system
+                </a>
+            </div>
         </div>
     )
 }
