@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import Game from "../models/Game";
 
-import instagramIcon from "../assets/instagram.svg";
-import tiktokIcon from "../assets/tiktok.png";
-import twitterIcon from "../assets/twitter.svg";
 import AboutView from "../components/About";
 
 function secondsToHumanReadable(seconds: number): string {
