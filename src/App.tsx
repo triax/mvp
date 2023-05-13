@@ -16,6 +16,7 @@ import RankingView from './containers/Ranking';
 import PickUpView from './containers/PickUp';
 import WaitingRoomView from './containers/WaitingRoom';
 import VoteView from './containers/Vote';
+import ThankYouView from './containers/ThankYou';
 
 function App() {
   const [myself, setMyself] = useState<User|null>(null);
@@ -68,6 +69,16 @@ function App() {
 
   if (!game.isReadyForVote(1) && !import.meta.env.DEV) {
     return <WaitingRoomView upcoming={game} />;
+  }
+
+  if (game.hasJustFinished()) {
+    return <ThankYouView
+      myself={myself}
+      game={game}
+      collection={refVotes}
+      switchTeam={switchTeam}
+      refresh={() => refresh(Date.now())}
+    />;
   }
 
   if (!myself.hasVotedFor(game)) {
