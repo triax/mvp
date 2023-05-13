@@ -66,7 +66,7 @@ function App() {
   //   />;
   // }
 
-  if (!game.isReadyForVote(2) && !import.meta.env.DEV) {
+  if (!game.isReadyForVote(1) && !import.meta.env.DEV) {
     return <WaitingRoomView upcoming={game} />;
   }
 
