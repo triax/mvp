@@ -12,7 +12,7 @@ export default function SignInView({ signin }: {
   return (
     <div>
       <h2>リアルタイムMVP投票システム</h2>
-      <span>Provided by <a href="https://www.triax.football" target="_blank">Clud Triax</a></span>
+      <span>Provided by <a href="https://www.triax.football" target="_blank">Club Triax</a></span>
       <div>「リアルタイムMVP投票システム」とは？ <br/><a href="https://www.triax.football/about/mvp-system" target="_blank">より詳しい説明はこちら</a></div>
       <h1>登録不要で参加できます！</h1>
       <h3>ニックネーム設定すると、よりたのしいと思います！</h3>

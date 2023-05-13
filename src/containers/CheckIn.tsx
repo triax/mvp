@@ -26,7 +26,7 @@ export default function CheckInView({ checkin, myself }: {
     return (
         <div>
             <h2>MVP投票システム</h2>
-            <span>Provided by <a href="https://www.triax.football" target="_blank">Clud Triax</a></span>
+            <span>Provided by <a href="https://www.triax.football" target="_blank">Club Triax</a></span>
             <h1>STEP 2/3:<br/>観戦中の試合にチェックインしてください</h1>
             <div>
                 {games.map((game) => <div key={game.id} style={{ marginBottom: "3rem" }}>

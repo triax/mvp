@@ -46,7 +46,7 @@ export default function PickUpView({
     return (
         <div>
             <h2>MVP投票システム</h2>
-            <span>Provided by <a href="https://www.triax.football" target="_blank">Clud Triax</a></span>
+            <span>Provided by <a href="https://www.triax.football" target="_blank">Club Triax</a></span>
             <h1>まず誰かに投票してみましょう！</h1>
             <small>※ 試合中、30秒ごとに何度でも投票できます！まずは直感で好きな選手に投票してみてください。</small>
             <TeamSwitchView game={game} switchTeam={switchTeam} />
