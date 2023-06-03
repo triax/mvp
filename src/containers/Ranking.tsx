@@ -8,6 +8,7 @@ import { default as Game, Status } from "../models/common/Game";
 import { default as Vote } from "../models/common/Vote";
 import { cooltimeRoutine, humanize } from "../utils";
 import GameTitle from "../components/GameTitle";
+import AboutView from "../components/About";
 
 export const loader: LoaderFunction = async ({ params }) => {
     const game = await Game.get(params.gameId!);
@@ -61,11 +62,7 @@ export default function RankingView() {
                 key={entry.member.id} entry={entry}
                 defautlIcon={game.getTeam(side).icon_image_url}
             />)}
-            <div style={{marginTop: "16px"}}>
-                <a style={{fontSize: "x-small"}} href="https://www.triax.football/about/mvp-system" target="_blank">
-                    リアルタイム投票システムについて https://www.triax.football/about/mvp-system
-                </a>
-            </div>
+            <AboutView />
         </div>
     )
 }
