@@ -6,7 +6,7 @@ import PlayerRankingItem from "../components/PlayerRankingItem";
 import { useLoaderData, useNavigate, type LoaderFunction } from "react-router-dom";
 import { default as Game } from "../models/common/Game";
 import { default as Vote } from "../models/common/Vote";
-import { cooltimeRoutine } from "../utils";
+import { cooltimeRoutine, humanize } from "../utils";
 
 export const loader: LoaderFunction = async ({ params }) => {
     const game = await Game.get(params.gameId!);
@@ -38,7 +38,7 @@ export default function RankingView() {
                 {myself.canVote() ? <button style={{ width: "100%" }}>
                     投票する
                 </button> : <button style={{ width: "100%" }} disabled>
-                    {-1 * cooltime}秒後に投票可能
+                    {humanize(-1 * cooltime)}後に投票可能
                 </button>}
             </div>
             {entries.map((entry, i) => <PlayerRankingItem

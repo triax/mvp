@@ -16,3 +16,19 @@ export function shuffle<T>(entries: T[]): T[] {
     }
     return shuffled;
 }
+
+export function humanize(seconds: number): string {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    // 0埋め
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    // h,m,sのうち、最初に0でないものから表示する
+    if (h > 0) {
+        return `${h}時間${pad(m)}分${pad(s)}秒`;
+    }
+    if (m > 0) {
+        return `${m}分${pad(s)}秒`;
+    }
+    return `${s}秒`;
+}

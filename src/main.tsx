@@ -1,16 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App, { loader as appLoader } from './App.tsx'
 import './index.css'
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import VoteView, { loader as voteLoader } from './containers/Vote.tsx';
 import RankingView, { loader as rankingLoader } from './containers/Ranking.tsx';
+import EntranceView, { loader as appLoader } from './containers/Entrance.tsx'
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <EntranceView />,
     loader: appLoader,
   },
   {
@@ -25,7 +25,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <App />,
+    element: <EntranceView />,
     loader: appLoader,
   },
 ]);

@@ -2,6 +2,8 @@ import Team, { TeamPropsObject } from "./Team";
 import { Base } from "./base";
 import Errors from "./errors";
 
+const checkinOffset = 1000 * 60 * 60 * 0.5; // 30分
+
 // enum "Status" represents the status of the game
 export enum Status {
     DRAFT = "draft", // つくったけどまだ見せない
@@ -125,8 +127,13 @@ export default class Game extends Base {
             return Status.ONGOING;
         }
         if (this.status == Status.STANDBY) {
-            if (this.kick_off.getTime() < Date.now()) {
+            // STANDBYであっても、キックオフがcheckinOffset以内ならONGOINGとする
+            if (this.kick_off.getTime() < (Date.now() + checkinOffset)) {
                 return Status.ONGOING;
+            }
+            // STANDBYであっても、試合終了時間を過ぎていたらFINISHEDとする
+            if (this.game_set.getTime() < (Date.now() - checkinOffset)) {
+                return Status.FINISHED;
             }
             return Status.STANDBY;
         }
@@ -135,5 +142,12 @@ export default class Game extends Base {
 
     getTeam(side: string): Team {
         return side === "home" ? this.home : this.visitor;
+    }
+
+    secondsToKickOff(): number {
+        return Math.floor((this.kick_off.getTime() - Date.now()) / 1000);
+    }
+    secondsToCheckIn(): number {
+        return this.secondsToKickOff() - Math.floor(checkinOffset / 1000);
     }
 }
