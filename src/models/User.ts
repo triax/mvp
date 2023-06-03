@@ -2,7 +2,7 @@ import { Model } from "jstorm/lib/browser/local";
 import Game from "./Game";
 
 // TODO: Fix
-const _cooltime = 1000 * 30;
+const _cooltime = 1000 * 60 * 10; // 10分
 
 export default class User extends Model {
     static override _namespace_ = "User";
