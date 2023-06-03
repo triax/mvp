@@ -39,22 +39,6 @@ export class Player {
         return raw; // Valid URL but not Google Drive
     }
 
-    static async fetch(spreadsheetURL: string, shuffle = false): Promise<Player[]> {
-        const response = await fetch(spreadsheetURL);
-        const text = await response.text();
-        const lines = text.split("\n").map(v => v.trim());
-        const headers = lines[0].split(",").map(col => col.trim());
-        const list = lines.slice(1).map(line => {
-            const values = line.split(",").map(v => v.trim());
-            const obj: Record<string, any> = {};
-            for (let i = 0; i < headers.length; i++) {
-                obj[headers[i]] = values[i];
-            }
-            return new Player(obj);
-        });
-        return shuffle ? Player.shuffle(list) : list;
-    }
-
     static shuffle(players: Player[]): Player[] {
         const shuffled = players.slice();
         for (let i = shuffled.length - 1; i > 0; i--) {

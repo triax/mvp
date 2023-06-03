@@ -1,5 +1,6 @@
-import { Player } from "../models/Player";
 import User from "../models/User";
+
+import { default as NeuMember } from "../models/common/Member";
 
 export default function PlayerItem({
     myself,
@@ -8,9 +9,9 @@ export default function PlayerItem({
     upvote,
 }: {
     myself?: User;
-    player: Player;
-    defaultIcon: string;
-    upvote?: (player: Player) => void;
+    player: NeuMember;
+    defaultIcon?: string;
+    upvote?: (player: NeuMember) => void;
 }) {
     const profsize = "20vw";
     return (
@@ -41,7 +42,7 @@ export default function PlayerItem({
                 <div style={{flex: 2, marginLeft: "8px"}}>
                     <div>
                         {player.number !== "" ? <span style={{}}>#{player.number} </span> : null}
-                        <span style={{fontWeight: "bold"}}>{player.last_name} {player.first_name} ({player.position})</span>
+                        <span style={{fontWeight: "bold"}}>{player.name} ({player.position})</span>
                     </div>
                     <div>
                         <blockquote>{player.comment}</blockquote>

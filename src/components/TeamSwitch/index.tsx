@@ -1,23 +1,28 @@
-import Game, { SupportingSide } from "../../models/Game";
 import "./index.css";
+
+import { default as NeuGame } from "../../models/common/Game";
 
 export default function TeamSwitchView({
     game,
-    switchTeam,
+    side,
+    switchSide,
 }: {
-    game: Game;
-    switchTeam: (team: SupportingSide) => void;
+    game: NeuGame;
+    side: string;
+    switchSide: (side: string) => void;
 }) {
     return <div className="team-switcher">
-        <div className={"team-item " + (game.supporting == SupportingSide.HOME ? "selected" : "")}
-            onClick={() => switchTeam(SupportingSide.HOME)}>
-            <div className="team-name">{game.home_team}</div>
-            <div className="team-icon" style={{ backgroundImage: `url(${game.home_team_default_icon})` }}></div>
+        <div className={"team-item " + (side == "home" ? "selected" : "")}
+            onClick={() => switchSide("home")}
+        >
+            <div className="team-name">{game.home.name}</div>
+            <div className="team-icon" style={{ backgroundImage: `url(${game.home.icon_image_url})` }}></div>
         </div>
-        <div className={"team-item " + (game.supporting == SupportingSide.VISITOR ? "selected" : "")}
-            onClick={() => switchTeam(SupportingSide.VISITOR)}>
-            <div className="team-name">{game.visitor_team}</div>
-            <div className="team-icon" style={{ backgroundImage: `url(${game.visitor_team_default_icon})` }}></div>
+        <div className={"team-item " + (side == "visitor" ? "selected" : "")}
+            onClick={() => switchSide("visitor")}
+        >
+            <div className="team-name">{game.visitor.name}</div>
+            <div className="team-icon" style={{ backgroundImage: `url(${game.visitor.icon_image_url})` }}></div>
         </div>
     </div>
 }

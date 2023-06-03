@@ -1,6 +1,9 @@
 import { Model } from "jstorm/lib/browser/local";
 import Game from "./Game";
 
+// TODO: Fix
+const _cooltime = 1000 * 30;
+
 export default class User extends Model {
     static override _namespace_ = "User";
     public nickname = "";
@@ -24,10 +27,10 @@ export default class User extends Model {
         return !!this.voted[game.id];
     }
 
-    canVote(now = Date.now(), cooltime = 1000 * 30): boolean {
+    canVote(now = Date.now(), cooltime = _cooltime): boolean {
         return this.secondsUntilRevote(now, cooltime) >= 0;
     }
-    secondsUntilRevote(now = Date.now(), cooltime = 1000 * 30): number {
+    secondsUntilRevote(now = Date.now(), cooltime = _cooltime): number {
         return Math.floor((now - (this.lastVotedTimestamp + cooltime)) / 1000);
     }
 }

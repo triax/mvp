@@ -1,83 +1,85 @@
-import { CollectionReference, DocumentData } from "firebase/firestore";
 import TeamSwitchView from "../components/TeamSwitch";
-import Game, { SupportingSide } from "../models/Game";
-import { Player } from "../models/Player";
 import User from "../models/User";
-import Vote from "../models/Vote";
 import { useEffect, useState } from "react";
-import LoadingIndicator from "../components/Loading";
 import PlayerItem from "../components/PlayerItem";
 
-export default function VoteView({
-    myself,
-    game,
-    collection,
-    switchTeam,
-}: {
-    myself: User,
-    game: Game,
-    collection: CollectionReference<DocumentData>,
-    switchTeam: (team: SupportingSide) => void,
-}) {
+
+import { default as NeuGame } from "../models/common/Game";
+import { default as NeuMember } from "../models/common/Member";
+import { default as NeuVote } from "../models/common/Vote";
+import { useLoaderData, useNavigate, type LoaderFunction } from "react-router-dom";
+import { cooltimeRoutine, shuffle } from "../utils";
+
+export const loader: LoaderFunction = async ({ params }) => {
+    const game = await NeuGame.get(params.gameId!);
+    const home = await NeuMember.list(game!.home.id!);
+    const visitor = await NeuMember.list(game!.visitor.id!);
+    const myself = await User.myself();
+    return { myself, game, players: { home, visitor } };
+}
+
+export default function VoteView() {
+    const navigate = useNavigate();
+    const { myself, game, players } = useLoaderData() as {
+        myself: User; game: NeuGame; players: { home: NeuMember[], visitor: NeuMember[] };
+    };
     const [cooltime, setCooltime] = useState<number>(myself.secondsUntilRevote());
-    const [players, setPlayers] = useState<Player[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => cooltimeRoutine(myself, setCooltime), [myself]);
 
     const url = new URL(location.href);
     const [query, setQuery] = useState<string>(url.searchParams.get("q") || "");
+    const [side, setSide] = useState<string>(location.hash.replace("#", "") || "visitor");
 
-    useEffect(() => {
-        setLoading(true);
-        Player.fetch(game.getRosterURL(game.supporting), true).then((players) => {
-            setPlayers(players);
-            setLoading(false);
+     const upvote = async (member: NeuMember) => {
+        const vote = new NeuVote({
+            game_id: game.id!, game,
+            member_id: member.id!, member,
+            side: side as "visitor"| "home",
+            timestamp: Date.now(),
+            uuid: myself.uuid,
         });
-    }, [game]);
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCooltime(myself.secondsUntilRevote());
-        }, 1000);
-        return () => clearInterval(timer);
-    }, [myself]);
-     const upvote = async (player: Player) => {
-        const vote = new Vote(myself, game, player, game.supporting);
-        await vote.push(collection);
+        await vote.insert();
         await myself.update({
-            voted: { ...myself.voted, [game.id]: true },
+            voted: { ...myself.voted, [game.id!]: true },
             lastVotedTimestamp: vote.timestamp,
         });
-        location.replace("/");
+        setCooltime(myself.secondsUntilRevote());
+        navigate(`/_g/${game.id}/_v`);
     };
 
-    const filter = (p: Player) => {
+    const filter = (p: NeuMember) => {
         if (query === "") return true;
-        return [p.first_name, p.last_name, p.fullname_eng, p.yomi_hiragana, p.number, p.position].some((s) => s.includes(query));
+        return [p.name, p.name_eng, p.name_yomi, p.number, p.position].some((s = "") => s.includes(query));
     }
+    const _s = side == "home" ? "home" : "visitor";
 
     return (
         <div>
             <TeamSwitchView
                 game={game}
-                switchTeam={switchTeam}
+                side={_s}
+                switchSide={(side) => setSide(side)}
             />
-            {loading ? <LoadingIndicator /> : <div>
+            <div>
                 {cooltime < 0 ? <div style={{ display: "flex" }}>
                     <span>再投票まであと{-1 * cooltime}秒</span>
                 </div> : <div style={{ display: "flex" }}>
                     <input type="text"
-                        style={{ flex: 1, fontSize: "0.8rem", height: "2rem", border: "1px solid #d0d0d0" }}
-                        placeholder=" 🔍 名前、背番号、ふりがな、ポジション"
+                        style={{ flex: 1, fontSize: "0.8rem", height: "2rem", border: "1px solid #d0d0d0", paddingLeft: "0.4rem"}}
+                        placeholder="🔍 名前、背番号、ふりがな、ポジション"
                         onChange={(e) => setQuery(e.target.value)}
+                        defaultValue={query}
                     />
                 </div>}
-                {players.filter(filter).map((player) => <PlayerItem
-                    key={player.identifier}
+                {shuffle(players[_s]).filter(filter).map((player) => <PlayerItem
+                    key={player.id}
                     player={player}
-                    defaultIcon={game.getDefaultIconURL(game.supporting)}
+                    defaultIcon={game[_s].icon_image_url}
                     upvote={upvote}
                     myself={myself}
                 />)}
-            </div>}
+            </div>
         </div>
     )
 }

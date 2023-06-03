@@ -1,37 +1,30 @@
-import { Player } from "../models/Player";
+import { useNavigate } from "react-router-dom";
 import { PlayerRankingEntry } from "../models/RankingEntry";
 
 export default function PlayerRankingItem({
     entry,
-    // upvote,
     defautlIcon,
     rank,
-    refresh,
 }: {
     entry: PlayerRankingEntry
-    upvote?: (player: Player) => void;
-    defautlIcon: string;
+    defautlIcon?: string;
     rank: number;
-    refresh: () => void;
 }) {
     const profsize = "10vw";
-    const { player, votes } = entry;
+    const { member, votes } = entry;
+    const navigate = useNavigate();
     return (
         <div
             style={{
                 marginBottom: "2px", display: "flex",
                 alignItems: "center",
             }}
+            onClick={() => navigate(`/_g/${entry.game.id}?q=${member.number}`)}
         >
             <div style={{width: "6vw", fontSize: "x-small", fontWeight: "bold"}}>
                 <span>{rank}</span>
             </div>
-            <div style={{width: profsize}}
-                onClick={() => {
-                    location.replace(`?q=${player.number}#vote`)
-                    setTimeout(refresh);
-                }}
-            >
+            <div style={{width: profsize}}>
                 <div
                     style={{
                         backgroundImage: `url(${defautlIcon})`,
@@ -43,7 +36,7 @@ export default function PlayerRankingItem({
                     }}
                 >
                     <img
-                        src={player.profile_image_url}
+                        src={member.profile_image_url}
                         style={{
                             width: profsize,
                             borderRadius: 1,
@@ -62,10 +55,10 @@ export default function PlayerRankingItem({
                 }}
             >
                 <div style={{ fontSize: "x-small" }}>
-                    {player.last_name} {player.first_name}
+                    {member.name}
                 </div>
                 <div style={{ fontSize: "x-small" }}>
-                    {player.number !== "" ? `#${player.number} ` : null} {player.position}
+                    {member.number !== "" ? `#${member.number} ` : null} {member.position}
                 </div>
             </div>
             <div style={{ flex: "3 3", display: "flex", flexDirection: "column" }}>
