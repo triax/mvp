@@ -3,10 +3,9 @@ import User from "../models/User";
 import { useEffect, useState } from "react";
 import PlayerItem from "../components/PlayerItem";
 
-
 import { default as NeuGame, Status } from "../models/common/Game";
 import { default as NeuMember } from "../models/common/Member";
-// import { default as NeuVote } from "../models/common/Vote";
+import { default as NeuVote } from "../models/common/Vote";
 import { useLoaderData, useNavigate, type LoaderFunction } from "react-router-dom";
 import { cooltimeRoutine, shuffle } from "../utils";
 
