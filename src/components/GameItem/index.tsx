@@ -38,10 +38,15 @@ export default function GameItem({game} : {game: Game}) {
     >
         <div>{game.kick_off?.toDateString()} {game.kick_off?.toLocaleTimeString()} Kickoff</div>
         <GameTitle game={game} />
-        <button style={{padding: "0.4rem 1.2rem", marginTop: "0.5rem", width: "100%"}}
+        <button
+		    style={{padding: "0.4rem 1.2rem", marginTop: "0.5rem", width: "100%"}}
             disabled={game.getStatus() != Status.ONGOING}
             onClick={() => navigate(`/_g/${game.id}`)}
         >{getButtonText(game)}</button>
         {game.getStatus() == Status.STANDBY ? <GameCountDown game={game} /> : null}
+		{game.getStatus() == Status.FINISHED ? <div
+			style={{textAlign: "center", width: "100%"}}
+			onClick={() => navigate(`/_g/${game.id}/_v`)}
+		>結果をみる</div> : null}
     </div>;
 }
