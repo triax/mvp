@@ -53,7 +53,7 @@ export default function PlayerItem({
                 <button
                     style={{width: "100%", height: "40px", borderRadius: 4, border: "solid thin #f0f0f0", marginTop: "8px"}}
                     onClick={async () => await upvote(player)}
-                    disabled={myself ? !myself.canVote() : false}
+                    disabled={myself ? !myself.canVote() : true}
                 >
                     投票する ★+1
                 </button>

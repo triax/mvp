@@ -23,45 +23,59 @@ export default function VoteView() {
     const { myself, game, players } = useLoaderData() as {
         myself: User; game: NeuGame; players: { home: NeuMember[], visitor: NeuMember[] };
     };
-    const [cooltime, setCooltime] = useState<number>(myself.secondsUntilRevote());
+	const status = game.getStatus();
+	const [side, setSide] = useState<string>("visitor");
+	const _s = side == "home" ? "home" : "visitor";
+	
+	if (status == Status.FINISHED || status == Status.CLOSED) {
+		return <div>
+		    <TeamSwitchView
+			    game={game} side={_s}
+                switchSide={(side) => setSide(side)}
+			/>
+			<div>
+		        <div style={{ display: "flex" }}><button
+                    style={{flex: 1}}
+					onClick={() => navigate(`/_g/${game.id}/_v`)}
+                >結果を見る</button></div>
+				{shuffle(players[_s]).map((player) => <PlayerItem
+                    key={player.id}
+                    player={player}
+                    defaultIcon={game[_s].icon_image_url}
+				/>)}
+			</div>
+		</div>;
+	}
 
+    const [cooltime, setCooltime] = useState<number>(myself.secondsUntilRevote());
     useEffect(() => cooltimeRoutine(myself, setCooltime), [myself]);
 
     const url = new URL(location.href);
     const [query, setQuery] = useState<string>(url.searchParams.get("q") || "");
-    const [side, setSide] = useState<string>(location.hash.replace("#", "") || "visitor");
 
-    //  const upvote = async (member: NeuMember) => {
-    //     const vote = new NeuVote({
-    //         game_id: game.id!, game,
-    //         member_id: member.id!, member,
-    //         side: side as "visitor"| "home",
-    //         timestamp: Date.now(),
-    //         uuid: myself.uuid,
-    //     });
-    //     await vote.insert();
-    //     await myself.update({
-    //         voted: { ...myself.voted, [game.id!]: true },
-    //         lastVotedTimestamp: vote.timestamp,
-    //     });
-    //     setCooltime(myself.secondsUntilRevote());
-    //     navigate(`/_g/${game.id}/_v`);
-    // };
+    const upvote = async (member: NeuMember) => {
+        const vote = new NeuVote({
+            game_id: game.id!, game,
+            member_id: member.id!, member,
+            side: side as "visitor"| "home",
+            timestamp: Date.now(),
+            uuid: myself.uuid,
+        });
+        await vote.insert();
+        await myself.update({
+            voted: { ...myself.voted, [game.id!]: true },
+            lastVotedTimestamp: vote.timestamp,
+        });
+        setCooltime(myself.secondsUntilRevote());
+        navigate(`/_g/${game.id}/_v`);
+    };
 
     const filter = (p: NeuMember) => {
         if (query === "") return true;
         return [p.name, p.name_eng, p.name_yomi, p.number, p.position].some((s = "") => s.includes(query));
     }
-    const _s = side == "home" ? "home" : "visitor";
 
     const getActionableSection = () => {
-        const s = game.getStatus();
-        if (s == Status.CLOSED || s == Status.FINISHED) return <div style={{ display: "flex" }}>
-            <button
-                style={{flex: 1}}
-                onClick={() => navigate(`/_g/${game.id}/_v`)}
-            >結果を見る</button>
-        </div>;
         if (cooltime < 0) return <div style={{ display: "flex" }}>
             <span>再投票まであと{-1 * cooltime}秒</span>
         </div>;
@@ -88,8 +102,7 @@ export default function VoteView() {
                     key={player.id}
                     player={player}
                     defaultIcon={game[_s].icon_image_url}
-                    // TODO: Dynamicにする
-                    // upvote={ upvote}
+                    upvote={ upvote}
                     myself={myself}
                 />)}
             </div>
