@@ -30,7 +30,7 @@ function App() {
     </>;
   }
   return <>
-    {games.map(game => <GameItemView key={game.id} game={game} />)}
+    {games.sort((p, n) => p.kick_off < n.kick_off ? 1 : -1).map(game => <GameItemView key={game.id} game={game} />)}
     <AboutView />
   </>;
 
