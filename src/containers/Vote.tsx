@@ -88,6 +88,12 @@ export default function VoteView() {
         </div>;
     }
 
+    const getEmptyView = () => {
+        return <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem" }}>
+            <h2 style={{color: "lightgray"}}>選手データがありません 😔</h2>
+        </div>;
+    }
+
     return (
         <div>
             <TeamSwitchView
@@ -97,6 +103,7 @@ export default function VoteView() {
             />
             <div>
                 {getActionableSection()}
+                {players[_s].length === 0 ? getEmptyView() : null}
                 {shuffle(players[_s]).filter(filter).map((player) => <PlayerItem
                     key={player.id}
                     player={player}
