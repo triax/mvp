@@ -11,10 +11,13 @@ import { cooltimeRoutine, shuffle } from "../utils";
 
 export const loader: LoaderFunction = async ({ params }) => {
     const game = await NeuGame.get(params.gameId!);
-    const home = await NeuMember.list(game!.home.id!);
+    const home    = await NeuMember.list(game!.home.id!);
     const visitor = await NeuMember.list(game!.visitor.id!);
     const myself = await User.myself();
-    return { myself, game, players: { home, visitor } };
+    return { myself, game, players: {
+        home: shuffle(home),
+        visitor: shuffle(visitor),
+    } };
 }
 
 export default function VoteView() {
@@ -25,26 +28,26 @@ export default function VoteView() {
 	const status = game.getStatus();
 	const [side, setSide] = useState<string>("visitor");
 	const _s = side == "home" ? "home" : "visitor";
-	
-	if (status == Status.FINISHED || status == Status.CLOSED) {
-		return <div>
-		    <TeamSwitchView
-			    game={game} side={_s}
+
+    if (status == Status.FINISHED || status == Status.CLOSED) {
+        return <div>
+            <TeamSwitchView
+                game={game} side={_s}
                 switchSide={(side) => setSide(side)}
-			/>
-			<div>
-		        <div style={{ display: "flex" }}><button
-                    style={{flex: 1}}
-					onClick={() => navigate(`/_g/${game.id}/_v`)}
+            />
+            <div>
+                <div style={{ display: "flex" }}><button
+                    style={{ flex: 1 }}
+                    onClick={() => navigate(`/_g/${game.id}/_v`)}
                 >結果を見る</button></div>
-				{shuffle(players[_s]).map((player) => <PlayerItem
+                {shuffle(players[_s]).map((player) => <PlayerItem
                     key={player.id}
                     player={player}
                     defaultIcon={game[_s].icon_image_url}
-				/>)}
-			</div>
-		</div>;
-	}
+                />)}
+            </div>
+        </div>;
+    }
 
     const [cooltime, setCooltime] = useState<number>(myself.secondsUntilRevote());
     useEffect(() => cooltimeRoutine(myself, setCooltime), [myself]);
@@ -104,7 +107,7 @@ export default function VoteView() {
             <div>
                 {getActionableSection()}
                 {players[_s].length === 0 ? getEmptyView() : null}
-                {shuffle(players[_s]).filter(filter).map((player) => <PlayerItem
+                {players[_s].filter(filter).map((player) => <PlayerItem
                     key={player.id}
                     player={player}
                     defaultIcon={game[_s].icon_image_url}
