@@ -48,7 +48,10 @@ export default function RankingView() {
 
     return (
         <div>
-		    <h2>現在の投票順位</h2>
+            <div style={{textAlign: "center"}}>
+                <h2>現在の投票順位</h2>
+                <span style={{fontSize: "small"}}>10分に1度、<span style={{fontWeight:"bold"}}>何度でも</span>投票いただけます</span>
+            </div>
             <TeamSwitchView game={game} side={side} switchSide={switchSide} />
             <div style={{margin: "16px 0"}}
                 onClick={() => navigate(`/_g/${game.id}`)}

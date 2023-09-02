@@ -45,7 +45,7 @@ export default function GameItem({game} : {game: Game}) {
         >{getButtonText(game)}</button>
         {game.getStatus() == Status.STANDBY ? <GameCountDown game={game} /> : null}
 		{game.getStatus() == Status.FINISHED ? <div
-			style={{textAlign: "center", width: "100%"}}
+			style={{textAlign: "center", width: "100%", color: "#646cff"}}
 			onClick={() => navigate(`/_g/${game.id}/_v`)}
 		>結果をみる</div> : null}
     </div>;
