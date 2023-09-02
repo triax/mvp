@@ -25,7 +25,7 @@ function GameCountDown({game} : {game: Game}) {
         return () => clearInterval(t);
     }, [secKickoff]);
     return <div style={{textAlign: "center", marginTop: "0.5rem"}}>
-        <div style={{fontSize: "0.8rem"}}>{humanize(remaining)}後に参加が可能になります</div>
+        <div style={{color: "#b12020", fontWeight: "bold"}}>{humanize(remaining)}後に参加が可能になります</div>
     </div>;
 }
 
