@@ -1,8 +1,9 @@
 import { Model } from "jstorm/lib/browser/local";
 import Game from "./Game";
+import { VotingIntervalMinutes } from "../constants";
 
 // TODO: Fix
-const _cooltime = 1000 * 60 * 10; // 10分
+const _cooltime = 1000 * 60 * VotingIntervalMinutes;
 
 export default class User extends Model {
     static override _namespace_ = "User";

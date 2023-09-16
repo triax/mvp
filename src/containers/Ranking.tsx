@@ -9,6 +9,7 @@ import { default as Vote } from "../models/common/Vote";
 import { cooltimeRoutine, humanize } from "../utils";
 import GameTitle from "../components/GameTitle";
 import AboutView from "../components/About";
+import { VotingIntervalMinutes } from "../constants";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const loader: LoaderFunction = async ({ params }) => {
@@ -51,7 +52,7 @@ export default function RankingView() {
         <div>
             <div style={{textAlign: "center"}}>
                 <h2>現在の投票順位</h2>
-                <span style={{fontSize: "small"}}>10分に1度、<span style={{fontWeight:"bold"}}>何度でも</span>投票いただけます</span>
+                <span style={{fontSize: "small"}}>{VotingIntervalMinutes}分に1度、<span style={{fontWeight:"bold"}}>何度でも</span>投票いただけます</span>
             </div>
             <TeamSwitchView game={game} side={side} switchSide={switchSide} />
             <div style={{margin: "16px 0"}}

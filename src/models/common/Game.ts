@@ -1,9 +1,10 @@
  
+import { VotingStartOffsetMinutes } from "../../constants";
 import Team, { TeamPropsObject } from "./Team";
 import { Base } from "./base";
 import Errors from "./errors";
 
-const checkinOffset = 1000 * 60 * 60 * 0.5; // 30分
+const checkinOffset = 1000 * 60 * VotingStartOffsetMinutes;
 
 // enum "Status" represents the status of the game
 export enum Status {
