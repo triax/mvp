@@ -89,7 +89,7 @@ export default class Game extends Model {
         return (this.kickoff_time?.getTime() <= (Date.now() + offset));
     }
 
-    hasJustFinished(_ = (24 * 7)): boolean {
+    hasJustFinished(/* _ = (24 * 7) */): boolean {
         return true;
         // TODO: 新たに、"closing"というステータスを追加すべき
         // if (this.status !== GameStatus.ACTIVE) return false;

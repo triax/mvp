@@ -91,6 +91,7 @@ export default class Member extends Base {
         const headers = rows[0].split(",");
         const members = rows.slice(1).map(row => {
             const cells = row.split(",");
+             
             const member: any = {};
             headers.forEach((header, i) => {
                 member[header] = cells[i];

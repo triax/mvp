@@ -8,6 +8,7 @@ import { useLoaderData, type LoaderFunction, useNavigate } from "react-router-do
 import AboutView from '../components/About';
 import GameItemView from "../components/GameItem";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const loader: LoaderFunction = async () => {
   const games = await NeuGame.list();
   const myself = await User.myself();

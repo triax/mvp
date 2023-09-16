@@ -22,6 +22,7 @@ export function votesToEntries(game: Game, votes: Vote[], filter: (v: Vote) => b
                     return ctx;
                 }
             }
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             return [...ctx, { member: vote.member!, game: game, side: vote.side, votes: [vote] }]
         }, [])
         .sort((a, b) => b.votes.length - a.votes.length);

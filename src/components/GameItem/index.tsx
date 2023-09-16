@@ -23,7 +23,7 @@ function GameCountDown({game} : {game: Game}) {
     useEffect(() => {
         const t = setInterval(() => setRemaining(game.secondsToCheckIn()), 1000);
         return () => clearInterval(t);
-    }, [secKickoff]);
+    }, [game, secKickoff]);
     return <div style={{textAlign: "center", marginTop: "0.5rem"}}>
         <div style={{color: "#b12020", fontWeight: "bold"}}>{humanize(remaining)}後に参加が可能になります</div>
     </div>;
@@ -39,7 +39,7 @@ export default function GameItem({game} : {game: Game}) {
         <div>{game.kick_off?.toDateString()} {game.kick_off?.toLocaleTimeString()} Kickoff</div>
         <GameTitle game={game} />
         <button
-		    style={{padding: "0.4rem 1.2rem", marginTop: "0.5rem", width: "100%"}}
+            style={{ padding: "0.4rem 1.2rem", marginTop: "0.5rem", width: "100%" }}
             disabled={game.getStatus() != Status.ONGOING}
             onClick={() => navigate(`/_g/${game.id}`)}
         >{getButtonText(game)}</button>

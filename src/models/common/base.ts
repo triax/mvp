@@ -1,3 +1,4 @@
+ 
 import { initializeApp } from "firebase/app";
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, onSnapshot, updateDoc } from "firebase/firestore";
 import Errors from "./errors";

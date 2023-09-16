@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useEffect, useState } from "react";
 import Game from "../models/Game";
 
@@ -32,7 +33,7 @@ export default function WaitingRoomView({
             setSecondsToStart(Math.floor(diff / 1000));
         }, 1000);
         return () => clearInterval(interval);
-    }, []);
+    }, [upcoming.kickoff_time]);
 
     return <div>
         <h2>試合開始をお待ちください...</h2>

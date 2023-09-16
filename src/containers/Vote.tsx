@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import TeamSwitchView from "../components/TeamSwitch";
 import User from "../models/User";
 import { useEffect, useState } from "react";
@@ -9,6 +10,7 @@ import { default as NeuVote } from "../models/common/Vote";
 import { useLoaderData, useNavigate, type LoaderFunction } from "react-router-dom";
 import { cooltimeRoutine, shuffle } from "../utils";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const loader: LoaderFunction = async ({ params }) => {
     const game = await NeuGame.get(params.gameId!);
     const home    = await NeuMember.list(game!.home.id!);
@@ -29,6 +31,11 @@ export default function VoteView() {
 	const [side, setSide] = useState<string>("visitor");
 	const _s = side == "home" ? "home" : "visitor";
 
+    const [cooltime, setCooltime] = useState<number>(myself.secondsUntilRevote());
+    useEffect(() => cooltimeRoutine(myself, setCooltime), [myself]);
+    const url = new URL(location.href);
+    const [query, setQuery] = useState<string>(url.searchParams.get("q") || "");
+
     if (status == Status.FINISHED || status == Status.CLOSED) {
         return <div>
             <TeamSwitchView
@@ -48,12 +55,6 @@ export default function VoteView() {
             </div>
         </div>;
     }
-
-    const [cooltime, setCooltime] = useState<number>(myself.secondsUntilRevote());
-    useEffect(() => cooltimeRoutine(myself, setCooltime), [myself]);
-
-    const url = new URL(location.href);
-    const [query, setQuery] = useState<string>(url.searchParams.get("q") || "");
 
     const upvote = async (member: NeuMember) => {
         const vote = new NeuVote({
