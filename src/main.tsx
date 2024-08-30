@@ -3,31 +3,36 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import VoteView, { loader as voteLoader } from './containers/Vote.tsx';
-import RankingView, { loader as rankingLoader } from './containers/Ranking.tsx';
-import EntranceView, { loader as appLoader } from './containers/Entrance.tsx'
+// import VoteView, { loader as voteLoader } from './containers/Vote.tsx';
+// import RankingView, { loader as rankingLoader } from './containers/Ranking.tsx';
+// import EntranceView, { loader as appLoader } from './containers/Entrance.tsx'
+import { TemporarilyClosed } from './containers/TemporarilyClosed.tsx';
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <EntranceView />,
-    loader: appLoader,
-  },
-  {
-    path: "/_g/:gameId",
-    element: <VoteView />,
-    loader: voteLoader,
-  },
-  {
-    path: "/_g/:gameId/_v",
-    element: <RankingView />,
-    loader: rankingLoader,
-  },
+  // {
+  //   path: "/",
+  //   element: <EntranceView />,
+  //   loader: appLoader,
+  // },
+  // {
+  //   path: "/_g/:gameId",
+  //   element: <VoteView />,
+  //   loader: voteLoader,
+  // },
+  // {
+  //   path: "/_g/:gameId/_v",
+  //   element: <RankingView />,
+  //   loader: rankingLoader,
+  // },
+  // {
+  //   path: "*",
+  //   element: <EntranceView />,
+  //   loader: appLoader,
+  // },
   {
     path: "*",
-    element: <EntranceView />,
-    loader: appLoader,
-  },
+    element: <TemporarilyClosed />,
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
